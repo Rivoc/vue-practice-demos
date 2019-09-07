@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <!-- 动态组件， type是组件名称，存在父组件的data中，根据组件名称的变化动态显示不同的组件 -->
+        <component :is="type" >
+        </component>
+        <button @click="handleClick">点我切换</button>
+    </div>
+</body>
+<script>
+    Vue.component('childOne',{
+        template:`<div v-once>hello</div>`,
+        }
+    )
+    Vue.component('childTwo',{
+        template:`<div v-once>world</div>`,
+        // 调用其他组件时，原组件就销毁一次，再次调用又重新创建，浪费性能，优化：v-once定义该组件或内容只能渲染一次，首次渲染后，存入内存中，不会随着数据改变而重新渲染，即当成静态内容看待
+        }
+    )
+    var app=new Vue({
+        el:"#box",
+        data:{
+            type:"childOne",
+        },
+        methods: {
+            handleClick:function(){
+                this.type=this.type==='childOne'?'childTwo':'childOne'
+            }
+        },
+    })
+</script>
+</html>

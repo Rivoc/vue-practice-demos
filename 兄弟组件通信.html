@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="box">
+        <child content="hello"></child>
+        <child content="world"></child> <!-- 不加:传的是普通字符串 -->
+    </div>
+</body>
+<script>
+    //实现的需求:点击子组件1，子组件2的内容变成与子组件一样，点击子组件2，子组件1的内容变成与子组件2一样
+     Vue.prototype.bus=new Vue()//让bus属性挂载到Vue的原型对象上，充当兄弟组件通信的桥梁
+    Vue.component('child',{
+        props:{
+            content:{//参数校验
+                type:String,
+                required:true
+            }
+        },
+        data: function(){
+            return {
+                selfContent:this.content//将父组件传来的值clone一份，因为单向数据流：子组件只能接收父组件传来的参数，不能修改参数
+            }
+        },
+        template:'<div @click="handleClick">{{selfContent}}</div>',
+        methods:{
+            handleClick:function(){
+                this.bus.$emit('change',this.selfContent)//用bus的实例方法$emit触发事件
+            }
+        },
+        mounted:function(){
+            var _this=this;//保存当前this，因为监听事件后执行的函数this指向的是this.bus
+            this.bus.$on('change',function(msg){//用bus的实例方法$on监听事件，不能用箭头函数，否则this指向window
+                _this.selfContent=msg
+                console.log(_this)
+            })
+        }
+    })
+    var app=new Vue({
+        el:'#box'
+    })
+</script>
+</html>

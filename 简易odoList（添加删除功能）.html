@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="root">
+    <input type="text" v-model="value" >
+    <button @click="handleBtnclick">提交</button>
+    <ul>
+        <todo-item :index="index" :content="item" v-for="(item,index) in list" @delete="handleItemDelete"></todo-item>
+    </ul>
+</div>
+</body>
+<script>
+    //局部组件,局部组件的创建必须在注册之前！
+var TodoItem={
+    props:['content','index'],
+    template:"<li @click='handleBtnclick'>{{content}}</li>",
+    methods:{
+        handleBtnclick:function(){
+            this.$emit("delete",this.index)
+    }
+
+}
+}
+var app=new Vue({
+el:'#root',
+components: {
+				TodoItem: TodoItem//注册局部组件
+			},
+data:{
+    list:[],
+    value:'',
+},
+methods:{
+    handleBtnclick:function(){
+        this.list.push(this.value);
+        this.value=""
+    },
+    handleItemDelete: function(index) {
+					this.list.splice(index, 1)
+	}
+
+}
+})
+
+//值都在父组件中
+//父组件和子组件链接的地方（即引用子组件的标签上），把父组件的值绑定给子组件，子组件用props来接收
+
+</script>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./aimate.css">
+    <script src="./vue.js"></script>
+    <script src="./velocity.js"></script>
+    <style> 
+    #root div{
+        font-size: 40px;
+        background-color: #fdf2b8;
+    }
+    .fade-enter-active,
+    .fade-leave-active{
+        transition: opacity 3s
+    }
+    .fade-enter,
+    .fade-leave-to{
+        opacity:0;
+    }
+
+    </style>
+</head>
+<body>
+    <!-- 练习了过渡动画、keyframe动画、js动画的一起使用 -->
+    <div id="root">
+        <!-- appear使一加载就有动画效果
+            enter-active-class
+            leave-active-class是将默认类名替换为自定义类名
+            引入animation库一定要在类名前写上animated
+            type决定了以哪一种类型的动画时长为准
+            @xxx是js动画的钩子，运行后会对绑定的事件处理函数传参el代表transition包裹的元素
+        -->
+        <transition
+            name="fade"
+            appear
+            appear-active-class="animated bounce fade-enter-active"
+            enter-active-class="animated bounce fade-enter-active"
+            leave-active-class="animated fadeOut fade-leave-active"
+            type="transition"
+            @before-enter="handleBeforeEnter"
+            @enter="handleEnter"
+            @after-enter="handleAfterEnter"
+            @before-leave="handleBeforeLeave"
+            @leave="handleLeave"
+            @after-leave="handleAfterLeave"
+        >
+            <div v-show="show">hello</div>
+        </transition>
+        <button @click="handelBtnClick">click!</button>
+    </div>
+</body>
+<script>
+var app=new Vue({
+    el:"#root",
+    data:{
+        show:true
+    },
+    methods: {
+        handelBtnClick:function(){
+            this.show=!this.show
+        },
+          //入场更改字体颜色
+        handleBeforeEnter:function(el){
+                console.log('开始前')
+          
+        },
+        handleEnter:function(el,done){
+                el.style.color="red"
+            setTimeout(()=>{
+                done()
+            },2000)
+        },
+        handleAfterEnter:function(el){
+            el.style.color="black"
+            console.log('入场动画结束')
+        },
+        //离场更改背景颜色
+        handleBeforeLeave:function(el){
+            console.log('离开之前')
+        },
+        handleLeave:function(el,done){//注意：Velocity最多只能传3个参数
+            Velocity(el,{backgroundColor:'blue'},{ duration: 1000 , complete: done })//duration是持续时间，这里背景色由黄过渡到蓝，过渡动画持续1s
+                
+        },
+        handleAfterLeave:function(el){
+            Velocity(el,{backgroundColor:'#fdf2b8'})
+            console.log('离开了')
+        }
+
+    },
+})
+</script>
+
+</html>

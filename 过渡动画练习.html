@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <style>
+        .v-enter-active,
+        .v-leave-active{
+            transition: opacity .8s;
+        }
+        .v-enter,.v-leave-to{
+            opacity:0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 需求，点击按钮文字淡入，再次点击文字淡出 -->
+    <div id="root">
+        <transition>
+            <div v-show="show"> hello world</div>
+        </transition>
+        <button @click="handleButtonCLick">change</button>
+    </div>
+
+</body>
+<script>
+var app=new Vue({
+    el:"#root",
+    data:{
+        show:true
+    },
+    methods: {
+        handleButtonCLick:function(){
+            this.show=!this.show
+        }
+    },
+})
+
+</script>
+</html>

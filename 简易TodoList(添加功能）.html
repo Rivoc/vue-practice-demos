@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>TodoList</title>
+    <script src="./vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="inputValue" /><!-- 双向绑定，将input标签的value与data里的inputeValue进行绑定 -->
+        <button v-on:click="handleBtnClick"><!-- 给按钮绑定一个名为handleBtnClick的点击事件 -->
+            提交
+        </button>
+        <ul>
+            <li v-for="item in list">{{item}}</li><!-- 循环提取list里的每一项，每提取一项，就创建一个li标签，将那一项的内容写到li标签内 -->
+        </ul>
+    </div>
+</body>
+<script>
+    //输入后点击提交自动清空输入框的内容，并将其添加到下方的li标签中
+    var app = new Vue({
+        el: "#app",//挂载点，负责接管的范围是id为app的div内
+        data: {//数据部分
+            list: [],
+            inputValue: ""
+        },
+        methods: {//方法放这里
+            handleBtnClick: function () {//不能用箭头函数，否则this指向就是window而不是vue实例
+                console.log(this);
+                this.list.push(this.inputValue);
+                this.inputValue = "";
+            }
+        }
+    });
+</script>
+
+</html>
